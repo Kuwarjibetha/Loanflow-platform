@@ -6,6 +6,6 @@ router.use(authenticate);
 
 router.post('/', authorize('user'), submit);
 router.get('/', authorize('user'), myRequests);
-router.get('/:id/status', authorize('user'), status);
+router.get('/:id/status', authorize('user', 'checker', 'approver'), status);
 
 module.exports = router;

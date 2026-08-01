@@ -21,9 +21,14 @@ async function createRequest(userId, { loanType, amountRequested, documents }) {
   });
 }
 
-async function getStatus(requestId, userId) {
+async function getStatus(requestId, requestingUser) {
+  const where = { id: requestId };
+  // Regular users can only see their own requests; staff can see any.
+  if (requestingUser.role === 'user') {
+    where.userId = requestingUser.id;
+  }
   return LoanRequest.findOne({
-    where: { id: requestId, userId },
+    where,
     include: ['stages', 'documents'],
   });
 }
@@ -46,4 +51,11 @@ async function approverQueue(departmentId) {
   });
 }
 
-module.exports = { createRequest, getStatus, listForUser, checkerQueue, approverQueue };
+async function listAll() {
+  return LoanRequest.findAll({
+    include: ['currentStage'],
+    order: [['createdAt', 'DESC']],
+  });
+}
+
+module.exports = { createRequest, getStatus, listForUser, checkerQueue, approverQueue, listAll };
