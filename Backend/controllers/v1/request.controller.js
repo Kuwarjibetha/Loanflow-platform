@@ -1,4 +1,4 @@
-const { createRequest, getStatus, listForUser, listAll } = require('../../service/v1/request.service');
+const { createRequest, getStatus, listForUser, listAll, addDocument } = require('../../service/v1/request.service');
 
 async function submit(req, res, next) {
   try {
@@ -37,4 +37,21 @@ async function allRequests(req, res, next) {
   }
 }
 
-module.exports = { submit, status, myRequests, allRequests };
+// req.file is populated by multer after the file was already uploaded to Cloudinary.
+async function uploadDocument(req, res, next) {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+    const doc = await addDocument(req.params.id, req.user.id, {
+      docType: req.body.docType || 'general',
+      filePath: req.file.path, // Cloudinary URL
+    });
+    if (!doc) return res.status(404).json({ success: false, message: 'Request not found' });
+    res.status(201).json({ success: true, data: doc });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { submit, status, myRequests, allRequests, uploadDocument };

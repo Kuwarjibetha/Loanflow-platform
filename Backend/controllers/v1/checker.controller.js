@@ -1,5 +1,5 @@
 const { advanceStage, returnToUser } = require('../../service/v1/workflow.service');
-const { checkerQueue } = require('../../service/v1/request.service');
+const { checkerQueue, verifyDocument } = require('../../service/v1/request.service');
 
 async function queue(req, res, next) {
   try {
@@ -28,4 +28,15 @@ async function returnRequest(req, res, next) {
   }
 }
 
-module.exports = { queue, forward, returnRequest };
+async function verifyDoc(req, res, next) {
+  try {
+    const { verificationStatus, invalidReason } = req.body;
+    const doc = await verifyDocument(req.params.docId, { verificationStatus, invalidReason });
+    if (!doc) return res.status(404).json({ success: false, message: 'Document not found' });
+    res.json({ success: true, data: doc });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { queue, forward, returnRequest, verifyDoc };

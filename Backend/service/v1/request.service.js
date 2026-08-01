@@ -7,23 +7,19 @@ async function createRequest(userId, { loanType, amountRequested, documents }) {
       { userId, loanType, amountRequested, status: 'checker_review' },
       { transaction: t }
     );
-
     if (documents?.length) {
       await Document.bulkCreate(
         documents.map((d) => ({ ...d, loanRequestId: request.id })),
         { transaction: t }
       );
     }
-
     await initStages(request, t);
-
     return request;
   });
 }
 
 async function getStatus(requestId, requestingUser) {
   const where = { id: requestId };
-  // Regular users can only see their own requests; staff can see any.
   if (requestingUser.role === 'user') {
     where.userId = requestingUser.id;
   }
@@ -58,4 +54,32 @@ async function listAll() {
   });
 }
 
-module.exports = { createRequest, getStatus, listForUser, checkerQueue, approverQueue, listAll };
+// Adds an uploaded document to a request. filePath is the Cloudinary URL,
+// already uploaded by the time this runs (multer-storage-cloudinary handles that).
+async function addDocument(requestId, userId, { docType, filePath }) {
+  const request = await LoanRequest.findOne({ where: { id: requestId, userId } });
+  if (!request) return null;
+
+  return Document.create({
+    loanRequestId: requestId,
+    docType,
+    filePath,
+    verificationStatus: 'pending',
+  });
+}
+
+// Checker marks a specific document valid or invalid.
+async function verifyDocument(docId, { verificationStatus, invalidReason }) {
+  const doc = await Document.findByPk(docId);
+  if (!doc) return null;
+
+  doc.verificationStatus = verificationStatus;
+  doc.invalidReason = verificationStatus === 'invalid' ? invalidReason : null;
+  await doc.save();
+  return doc;
+}
+
+module.exports = {
+  createRequest, getStatus, listForUser, checkerQueue, approverQueue, listAll,
+  addDocument, verifyDocument,
+};
