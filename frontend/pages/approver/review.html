@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Review Request - Loan Tracking</title>
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+</head>
+<body>
+  <div id="navbar-slot"></div>
+  <div class="container">
+    <h2 class="page-header">Review Request</h2>
+    <div id="request-detail"></div>
+    <div class="card">
+      <div class="form-group">
+        <label>Remarks</label>
+        <textarea id="remarks" rows="3" placeholder="e.g. Approved"></textarea>
+      </div>
+      <button id="approve-btn" class="btn btn--primary">Approve &amp; Forward</button>
+      <button id="reroute-btn" class="btn btn--outline">Reroute to Other Dept</button>
+      <button id="return-btn" class="btn btn--danger">Return to User</button>
+    </div>
+  </div>
+
+  <script src="../../js/config.js"></script>
+  <script src="../../js/services/api.js"></script>
+  <script src="../../js/services/authService.js"></script>
+  <script src="../../js/services/requestService.js"></script>
+  <script src="../../js/utils/auth-guard.js"></script>
+  <script src="../../js/utils/dom.js"></script>
+  <script src="../../js/pages/approver-review.js"></script>
+</body>
+</html>

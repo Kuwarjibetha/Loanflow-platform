@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Submit Request - Loan Tracking</title>
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+</head>
+<body>
+  <div id="navbar-slot"></div>
+  <div class="container" style="max-width:500px;">
+    <h2 class="page-header">Submit Loan Request</h2>
+    <div id="error-box" class="badge badge--rejected" style="display:none; margin-bottom:12px;"></div>
+    <form id="submit-form" class="card">
+      <div class="form-group">
+        <label>Loan Type</label>
+        <select id="loanType">
+          <option value="education">Education</option>
+          <option value="skill">Skill Development</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Amount Requested</label>
+        <input type="number" id="amountRequested" required>
+      </div>
+      <button type="submit" class="btn btn--primary">Submit</button>
+    </form>
+  </div>
+
+  <script src="../../js/config.js"></script>
+  <script src="../../js/services/api.js"></script>
+  <script src="../../js/services/authService.js"></script>
+  <script src="../../js/services/requestService.js"></script>
+  <script src="../../js/utils/auth-guard.js"></script>
+  <script src="../../js/utils/dom.js"></script>
+  <script src="../../js/pages/submit-request.js"></script>
+</body>
+</html>

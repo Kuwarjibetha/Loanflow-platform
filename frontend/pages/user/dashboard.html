@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Requests - Loan Tracking</title>
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+</head>
+<body>
+  <div id="navbar-slot"></div>
+  <div class="container">
+    <div class="page-header" style="display:flex; justify-content:space-between; align-items:center;">
+      <h2>My Loan Requests</h2>
+      <a href="submit-request.html" class="btn btn--primary">New Request</a>
+    </div>
+    <div id="request-list"></div>
+  </div>
+
+  <script src="../../js/config.js"></script>
+  <script src="../../js/services/api.js"></script>
+  <script src="../../js/services/authService.js"></script>
+  <script src="../../js/services/requestService.js"></script>
+  <script src="../../js/utils/auth-guard.js"></script>
+  <script src="../../js/utils/dom.js"></script>
+  <script src="../../js/pages/user-dashboard.js"></script>
+</body>
+</html>

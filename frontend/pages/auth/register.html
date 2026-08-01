@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - Loan Tracking</title>
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+</head>
+<body>
+  <div class="container" style="max-width:400px; margin-top:60px;">
+    <div class="card">
+      <h2 style="margin-bottom:16px;">Register</h2>
+      <div id="error-box" class="badge badge--rejected" style="display:none; margin-bottom:12px;"></div>
+      <form id="register-form">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" id="name" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="password" required>
+        </div>
+        <button type="submit" class="btn btn--primary">Create account</button>
+      </form>
+      <p style="margin-top:12px; font-size:14px;">Already registered? <a href="login.html">Login</a></p>
+    </div>
+  </div>
+
+  <script src="../../js/config.js"></script>
+  <script src="../../js/services/api.js"></script>
+  <script src="../../js/services/authService.js"></script>
+  <script src="../../js/utils/dom.js"></script>
+  <script src="../../js/pages/register.js"></script>
+</body>
+</html>
