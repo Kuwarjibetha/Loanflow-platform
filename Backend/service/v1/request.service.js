@@ -1,5 +1,5 @@
 const { sequelize, LoanRequest, Document, ApprovalStage } = require('../../models');
-const { initStages } = require('./workflow.service');
+const { initStages, resubmit } = require('./workflow.service');
 
 async function createRequest(userId, { loanType, amountRequested, documents }) {
   return sequelize.transaction(async (t) => {
@@ -57,12 +57,9 @@ async function listAll() {
   });
 }
 
-// Adds an uploaded document to a request. filePath is the Cloudinary URL,
-// already uploaded by the time this runs (multer-storage-cloudinary handles that).
 async function addDocument(requestId, userId, { docType, filePath }) {
   const request = await LoanRequest.findOne({ where: { id: requestId, userId } });
   if (!request) return null;
-
   return Document.create({
     loanRequestId: requestId,
     docType,
@@ -71,18 +68,35 @@ async function addDocument(requestId, userId, { docType, filePath }) {
   });
 }
 
-// Checker marks a specific document valid or invalid.
 async function verifyDocument(docId, { verificationStatus, invalidReason }) {
   const doc = await Document.findByPk(docId);
   if (!doc) return null;
-
   doc.verificationStatus = verificationStatus;
   doc.invalidReason = verificationStatus === 'invalid' ? invalidReason : null;
   await doc.save();
   return doc;
 }
 
+// User resubmits their own returned request. currentStageId still points
+// at the stage that returned it, so we just fetch that stage and hand it
+// to the workflow engine's resubmit() function.
+async function resubmitRequest(requestId, userId) {
+  const request = await LoanRequest.findOne({
+    where: { id: requestId, userId },
+    include: [{ model: ApprovalStage, as: 'currentStage' }],
+  });
+  if (!request) return null;
+
+  if (request.status !== 'returned_to_user') {
+    const err = new Error('Request is not in a returned state');
+    err.status = 409;
+    throw err;
+  }
+
+  return resubmit(request, request.currentStage);
+}
+
 module.exports = {
   createRequest, getStatus, listForUser, checkerQueue, approverQueue, listAll,
-  addDocument, verifyDocument,
+  addDocument, verifyDocument, resubmitRequest,
 };

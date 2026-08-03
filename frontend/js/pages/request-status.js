@@ -18,8 +18,6 @@ async function render() {
   el('#nav-logout').addEventListener('click', () => authService.logout());
   const id = new URLSearchParams(window.location.search).get('id');
   const { data } = await requestService.status(id);
-  // DEBUG: inspect full API response in browser DevTools Console — remove after confirming
-  console.log('[request-status] raw API data:', JSON.stringify(data, null, 2));
 
   const statusClass = data.status === 'approved' ? 'approved' : data.status === 'returned_to_user' ? 'rejected' : 'progress';
 
@@ -35,6 +33,10 @@ async function render() {
       <div class="divider"></div>
       <p style="font-size:13px; color:var(--c-muted);">Amount Requested</p>
       <p style="font-size:22px; font-weight:600; letter-spacing:-0.5px;">₹${Number(data.amountRequested).toLocaleString('en-IN')}</p>
+      ${data.status === 'returned_to_user' ? `
+        <div class="divider"></div>
+        <button id="resubmit-btn" class="btn btn--primary">Resubmit Request</button>
+      ` : ''}
     </div>
 
     <p class="section-label" style="margin: 22px 0 10px;">Documents</p>
@@ -66,6 +68,17 @@ async function render() {
       `).join('')}
     </div>
   `;
+
+  if (data.status === 'returned_to_user') {
+    el('#resubmit-btn').addEventListener('click', async () => {
+      try {
+        await requestService.resubmit(id);
+        render();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+  }
 }
 
 render();

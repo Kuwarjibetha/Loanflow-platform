@@ -15,6 +15,9 @@ const requestService = {
     formData.append('docType', docType);
     return apiUpload(`/requests/${requestId}/documents`, formData);
   },
+  resubmit(requestId) {
+    return apiRequest(`/requests/${requestId}/resubmit`, { method: 'POST' });
+  },
 
   // Checker actions
   checkerQueue() {

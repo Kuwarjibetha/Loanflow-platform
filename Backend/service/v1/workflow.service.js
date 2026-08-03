@@ -111,4 +111,28 @@ async function returnToUser(loanRequest, currentStage, actingUser, remarks) {
   });
 }
 
-module.exports = { initStages, advanceStage, rerouteToDepartment, returnToUser };
+// User resubmits a returned request. Re-activates the exact stage that
+// returned it (checker or a specific department's approver) rather than
+// restarting the whole chain - whoever flagged the issue reviews it again.
+async function resubmit(loanRequest, currentStage) {
+  if (currentStage.status !== 'returned') {
+    const err = new Error('Only returned requests can be resubmitted');
+    err.status = 409;
+    throw err;
+  }
+
+  return sequelize.transaction(async (t) => {
+    currentStage.status = 'in_progress';
+    currentStage.actedByUserId = null;
+    currentStage.remarks = null;
+    currentStage.actedAt = null;
+    await currentStage.save({ transaction: t });
+
+    loanRequest.status = currentStage.role === 'checker' ? 'checker_review' : 'approver_review';
+    await loanRequest.save({ transaction: t });
+
+    return loanRequest;
+  });
+}
+
+module.exports = { initStages, advanceStage, rerouteToDepartment, returnToUser, resubmit };

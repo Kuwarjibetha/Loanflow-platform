@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +7,12 @@
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/layout.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    /* Inline verify-button colours that use CSS vars */
+    .btn--valid   { color: var(--c-green) !important; }
+    .btn--invalid { color: var(--c-red)   !important; }
+  </style>
 </head>
-
 <body>
   <div id="navbar-slot"></div>
   <div class="container">
@@ -17,14 +20,16 @@
       <h2>Verify Request</h2>
       <a href="queue.html" class="btn btn--outline">← Queue</a>
     </div>
+
+    <!-- Loan summary + document rows injected here -->
     <div id="request-detail"></div>
-    <h3 style="margin:16px 0 8px;">Documents</h3>
-    <div id="document-list"></div>
+
+    <!-- Checker forward / return decision -->
     <div class="card" style="margin-top:16px;">
       <p class="section-label" style="margin-bottom:14px;">Checker Decision</p>
       <div class="form-group">
         <label for="remarks">Remarks</label>
-        <textarea id="remarks" rows="3" placeholder="e.g. Documents verified and look correct"></textarea>
+        <textarea id="remarks" rows="3" placeholder="e.g. All documents verified and look correct"></textarea>
       </div>
       <div class="action-row">
         <button id="forward-btn" class="btn btn--primary">Forward to Approver</button>
@@ -41,5 +46,4 @@
   <script src="../../js/utils/dom.js"></script>
   <script src="../../js/pages/checker-verify.js"></script>
 </body>
-
 </html>
