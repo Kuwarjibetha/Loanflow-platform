@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin — LoanFlow</title>
+  <title>Users — LoanFlow Admin</title>
+  <meta name="description" content="Manage user roles and department assignments.">
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/layout.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
@@ -11,15 +12,17 @@
 <body>
   <div id="navbar-slot"></div>
   <div class="container--wide">
+
     <div class="page-header">
-      <h2>All Loan Requests</h2>
+      <h2>Users</h2>
       <div style="display:flex; gap:8px;">
-        <a href="users.html" class="btn btn--outline">Manage Users</a>
-        <a href="departments.html" class="btn btn--outline">Manage Departments</a>
+        <a href="dashboard.html"   class="btn btn--outline">← Requests</a>
+        <a href="departments.html" class="btn btn--outline">Departments</a>
       </div>
     </div>
-    <div id="summary" style="margin-bottom:20px;"></div>
-    <div id="request-list"></div>
+
+    <div id="user-list"></div>
+
   </div>
 
   <script src="../../js/config.js"></script>
@@ -28,6 +31,6 @@
   <script src="../../js/services/requestService.js"></script>
   <script src="../../js/utils/auth-guard.js"></script>
   <script src="../../js/utils/dom.js"></script>
-  <script src="../../js/pages/admin-dashboard.js"></script>
+  <script src="../../js/pages/admin-users.js"></script>
 </body>
 </html>

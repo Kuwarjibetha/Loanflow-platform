@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Departments — LoanFlow Admin</title>
+  <meta name="description" content="Manage approval departments and their sequence order.">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+</head>
+<body>
+  <div id="navbar-slot"></div>
+  <div class="container">
+
+    <div class="page-header">
+      <h2>Departments</h2>
+      <a href="dashboard.html" class="btn btn--outline">← Requests</a>
+    </div>
+
+    <!-- Add department form -->
+    <div class="card" style="margin-bottom:24px;">
+      <p class="section-label" style="margin-bottom:14px;">Add Department</p>
+      <div id="add-error" class="alert alert--error" style="display:none;"></div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <div class="form-group" style="flex:2; min-width:140px; margin-bottom:0;">
+          <label for="new-name">Name</label>
+          <input type="text" id="new-name" placeholder="e.g. Finance">
+        </div>
+        <div class="form-group" style="flex:1; min-width:80px; margin-bottom:0;">
+          <label for="new-order">Sequence Order</label>
+          <input type="number" id="new-order" placeholder="e.g. 2" min="0">
+        </div>
+        <div style="display:flex; align-items:flex-end;">
+          <button id="add-btn" class="btn btn--primary">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Department list -->
+    <p class="section-label" style="margin-bottom:10px;">Current Departments</p>
+    <div id="dept-list"></div>
+
+  </div>
+
+  <script src="../../js/config.js"></script>
+  <script src="../../js/services/api.js"></script>
+  <script src="../../js/services/authService.js"></script>
+  <script src="../../js/services/requestService.js"></script>
+  <script src="../../js/utils/auth-guard.js"></script>
+  <script src="../../js/utils/dom.js"></script>
+  <script src="../../js/pages/admin-departments.js"></script>
+</body>
+</html>

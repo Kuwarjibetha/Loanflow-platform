@@ -18,6 +18,10 @@ LoanRequest.belongsTo(ApprovalStage, { foreignKey: 'currentStageId', as: 'curren
 Department.hasMany(ApprovalStage, { foreignKey: 'departmentId', as: 'stages' });
 ApprovalStage.belongsTo(Department, { foreignKey: 'departmentId' });
 
+// Users can belong to a department (checker/approver roles)
+User.belongsTo(Department, { foreignKey: 'departmentId', as: 'department' });
+Department.hasMany(User, { foreignKey: 'departmentId', as: 'members' });
+
 ApprovalStage.belongsTo(User, { foreignKey: 'actedByUserId', as: 'actedBy' });
 
 LoanRequest.hasMany(Document, { foreignKey: 'loanRequestId', as: 'documents' });

@@ -57,4 +57,22 @@ const requestService = {
   adminAllRequests() {
     return apiRequest('/admin/requests');
   },
+  adminListDepartments() {
+    return apiRequest('/admin/departments');
+  },
+  adminCreateDepartment(name, sequenceOrder) {
+    return apiRequest('/admin/departments', { method: 'POST', body: { name, sequenceOrder } });
+  },
+  adminUpdateDepartment(id, fields) {
+    return apiRequest(`/admin/departments/${id}`, { method: 'PATCH', body: fields });
+  },
+  adminDeleteDepartment(id) {
+    return apiRequest(`/admin/departments/${id}`, { method: 'DELETE' });
+  },
+  adminListUsers() {
+    return apiRequest('/admin/users');
+  },
+  adminUpdateUser(id, fields) {
+    return apiRequest(`/admin/users/${id}`, { method: 'PATCH', body: fields });
+  },
 };

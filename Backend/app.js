@@ -16,6 +16,15 @@ app.use('/api/v1', require('./routes/v1'));
 
 const PORT = process.env.PORT || 3000;
 
+// Global JSON error handler — must have 4 args so Express treats it as error middleware.
+// multer-storage-cloudinary throws plain objects, not Error instances, so normalise both.
+app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
+  const status  = err.status || err.statusCode || 500;
+  const message = err.message || (typeof err === 'object' ? JSON.stringify(err) : String(err));
+  console.error('[error]', status, message);
+  res.status(status).json({ success: false, message });
+});
+
 async function start() {
   await sequelize.authenticate();
   console.log('Database connected');

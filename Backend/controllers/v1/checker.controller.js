@@ -31,6 +31,14 @@ async function returnRequest(req, res, next) {
 async function verifyDoc(req, res, next) {
   try {
     const { verificationStatus, invalidReason } = req.body;
+
+    if (!['verified', 'invalid', 'pending'].includes(verificationStatus)) {
+      return res.status(400).json({ success: false, message: 'verificationStatus must be verified, invalid, or pending' });
+    }
+    if (verificationStatus === 'invalid' && !invalidReason?.trim()) {
+      return res.status(400).json({ success: false, message: 'invalidReason is required when marking a document invalid' });
+    }
+
     const doc = await verifyDocument(req.params.docId, { verificationStatus, invalidReason });
     if (!doc) return res.status(404).json({ success: false, message: 'Document not found' });
     res.json({ success: true, data: doc });
