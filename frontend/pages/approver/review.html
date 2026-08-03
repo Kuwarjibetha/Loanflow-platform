@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Review Request - Loan Tracking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Request — LoanFlow</title>
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/layout.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
@@ -10,16 +11,22 @@
 <body>
   <div id="navbar-slot"></div>
   <div class="container">
-    <h2 class="page-header">Review Request</h2>
+    <div class="page-header">
+      <h2>Review Request</h2>
+      <a href="queue.html" class="btn btn--outline">← Queue</a>
+    </div>
     <div id="request-detail"></div>
-    <div class="card">
+    <div class="card" style="margin-top:16px;">
+      <p class="section-label" style="margin-bottom:14px;">Approver Decision</p>
       <div class="form-group">
-        <label>Remarks</label>
-        <textarea id="remarks" rows="3" placeholder="e.g. Approved"></textarea>
+        <label for="remarks">Remarks</label>
+        <textarea id="remarks" rows="3" placeholder="e.g. All documents verified, approved"></textarea>
       </div>
-      <button id="approve-btn" class="btn btn--primary">Approve &amp; Forward</button>
-      <button id="reroute-btn" class="btn btn--outline">Reroute to Other Dept</button>
-      <button id="return-btn" class="btn btn--danger">Return to User</button>
+      <div class="action-row">
+        <button id="approve-btn" class="btn btn--primary">Approve &amp; Forward</button>
+        <button id="reroute-btn" class="btn btn--outline">Reroute to Other Dept</button>
+        <button id="return-btn" class="btn btn--danger">Return to User</button>
+      </div>
     </div>
   </div>
 

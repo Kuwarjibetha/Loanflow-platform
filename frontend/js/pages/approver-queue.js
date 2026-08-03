@@ -8,15 +8,22 @@ async function render() {
   const list = el('#queue-list');
 
   if (!data.length) {
-    list.innerHTML = '<p>No requests waiting for your department.</p>';
+    list.innerHTML = `
+      <div class="empty">
+        <p style="font-size:15px; font-weight:500; margin-bottom:6px;">Queue is empty</p>
+        <p>No requests pending approval in your department.</p>
+      </div>`;
     return;
   }
 
   list.innerHTML = data.map((stage) => `
-    <div class="card">
-      <strong>${stage.LoanRequest.loanType}</strong> - ₹${stage.LoanRequest.amountRequested}
-      <div><a href="review.html?id=${stage.LoanRequest.id}">Review</a></div>
-    </div>
+    <a href="review.html?id=${stage.LoanRequest.id}" class="req-row">
+      <div class="req-row__left">
+        <span class="req-row__title">${stage.LoanRequest.loanType.charAt(0).toUpperCase() + stage.LoanRequest.loanType.slice(1)} Loan</span>
+        <span class="req-row__meta">₹${Number(stage.LoanRequest.amountRequested).toLocaleString('en-IN')}</span>
+      </div>
+      <span class="badge badge--progress">Review</span>
+    </a>
   `).join('');
 }
 

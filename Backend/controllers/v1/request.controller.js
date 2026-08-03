@@ -13,6 +13,8 @@ async function status(req, res, next) {
   try {
     const request = await getStatus(req.params.id, req.user);
     if (!request) return res.status(404).json({ success: false, message: 'Request not found' });
+    // DEBUG: remove after confirming documents load correctly
+    console.log('[status] documents count:', request.documents?.length, '| ids:', request.documents?.map(d => d.id));
     res.json({ success: true, data: request });
   } catch (err) {
     next(err);

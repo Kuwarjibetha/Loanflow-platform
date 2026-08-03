@@ -25,7 +25,10 @@ async function getStatus(requestId, requestingUser) {
   }
   return LoanRequest.findOne({
     where,
-    include: ['stages', 'documents'],
+    include: [
+      { model: ApprovalStage, as: 'stages' },
+      { model: Document, as: 'documents' },
+    ],
   });
 }
 

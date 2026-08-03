@@ -1,24 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Verify Request - Loan Tracking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Request — LoanFlow</title>
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/layout.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
 </head>
+
 <body>
   <div id="navbar-slot"></div>
   <div class="container">
-    <h2 class="page-header">Verify Request</h2>
+    <div class="page-header">
+      <h2>Verify Request</h2>
+      <a href="queue.html" class="btn btn--outline">← Queue</a>
+    </div>
     <div id="request-detail"></div>
-    <div class="card">
+    <h3 style="margin:16px 0 8px;">Documents</h3>
+    <div id="document-list"></div>
+    <div class="card" style="margin-top:16px;">
+      <p class="section-label" style="margin-bottom:14px;">Checker Decision</p>
       <div class="form-group">
-        <label>Remarks</label>
-        <textarea id="remarks" rows="3" placeholder="e.g. Documents look fine"></textarea>
+        <label for="remarks">Remarks</label>
+        <textarea id="remarks" rows="3" placeholder="e.g. Documents verified and look correct"></textarea>
       </div>
-      <button id="forward-btn" class="btn btn--primary">Forward to Approver</button>
-      <button id="return-btn" class="btn btn--danger">Return to User</button>
+      <div class="action-row">
+        <button id="forward-btn" class="btn btn--primary">Forward to Approver</button>
+        <button id="return-btn" class="btn btn--danger">Return to User</button>
+      </div>
     </div>
   </div>
 
@@ -30,4 +41,5 @@
   <script src="../../js/utils/dom.js"></script>
   <script src="../../js/pages/checker-verify.js"></script>
 </body>
+
 </html>

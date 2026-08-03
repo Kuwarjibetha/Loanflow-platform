@@ -9,6 +9,12 @@ const requestService = {
   status(id) {
     return apiRequest(`/requests/${id}/status`);
   },
+  uploadDocument(requestId, file, docType) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('docType', docType);
+    return apiUpload(`/requests/${requestId}/documents`, formData);
+  },
 
   // Checker actions
   checkerQueue() {
@@ -19,6 +25,12 @@ const requestService = {
   },
   checkerReturn(requestId, remarks) {
     return apiRequest(`/checker/${requestId}/return`, { method: 'POST', body: { remarks } });
+  },
+  checkerVerifyDocument(requestId, docId, verificationStatus, invalidReason) {
+    return apiRequest(`/checker/${requestId}/documents/${docId}`, {
+      method: 'PATCH',
+      body: { verificationStatus, invalidReason },
+    });
   },
 
   // Approver actions

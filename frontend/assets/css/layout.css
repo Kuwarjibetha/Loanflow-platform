@@ -1,26 +1,108 @@
+/* ── Navbar ─────────────────────────────────────────── */
 .navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 32px;
-  background: #fff;
-  border-bottom: 1px solid var(--color-border);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  height: 56px;
+  padding: 0 28px;
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.navbar strong { font-size: 17px; color: var(--color-primary); }
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--c-text);
+  letter-spacing: -0.2px;
+}
 
-.navbar__links { display: flex; gap: 20px; align-items: center; }
-.navbar__links a { color: var(--color-muted); font-weight: 500; }
-.navbar__links a:hover { color: var(--color-text); text-decoration: none; }
+.navbar__brand span {
+  width: 26px;
+  height: 26px;
+  background: var(--c-accent);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
 
+.navbar__links { display: flex; gap: 8px; align-items: center; }
+
+.navbar__links a {
+  color: var(--c-muted);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  transition: background 0.12s, color 0.12s;
+}
+.navbar__links a:hover {
+  background: var(--c-bg);
+  color: var(--c-text);
+  text-decoration: none;
+}
+
+/* ── Container ──────────────────────────────────────── */
 .container {
-  max-width: 720px;
+  max-width: 700px;
   margin: 0 auto;
-  padding: 32px 24px;
+  padding: 36px 24px 60px;
+}
+
+.container--wide {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 36px 24px 60px;
 }
 
 .page-header {
-  margin-bottom: 20px;
-  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+/* ── Auth layout ────────────────────────────────────── */
+.auth-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--c-bg);
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 380px;
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--c-text);
+  margin-bottom: 28px;
+}
+
+.auth-logo span {
+  width: 30px;
+  height: 30px;
+  background: var(--c-accent);
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
 }
