@@ -10,11 +10,11 @@ async function seed() {
     { name: 'Education Board', sequenceOrder: 3 },
   ]);
 
-  console.log('✅ Departments seeded');
+  console.log(' Departments seeded');
   process.exit(0);
 }
 
 seed().catch((err) => {
-  console.error('❌ Seed failed:', err.message);
+  console.error(' Seed failed:', err.message);
   process.exit(1);
 });

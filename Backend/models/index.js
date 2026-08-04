@@ -1,11 +1,11 @@
-const sequelize = require('../config/db');
-const User = require('./User');
-const Department = require('./Department');
-const LoanRequest = require('./LoanRequest');
-const ApprovalStage = require('./ApprovalStage');
-const Document = require('./Document');
-const AuditLog = require('./AuditLog');
-const Notification = require('./Notification');
+const { sequelize } = require('../config');
+const User = require('./User/User');
+const Department = require('./Department/Department');
+const LoanRequest = require('./LoanRequest/LoanRequest');
+const ApprovalStage = require('./ApprovalStage/ApprovalStage');
+const Document = require('./Document/Document');
+const AuditLog = require('./AuditLog/AuditLog');
+const Notification = require('./Notification/Notification');
 
 // --- Associations ---
 User.hasMany(LoanRequest, { foreignKey: 'userId', as: 'requests' });
