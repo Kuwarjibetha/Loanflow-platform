@@ -1,12 +1,12 @@
 requireRole('admin');
 
-// ── State ────────────────────────────────────────────────────────────────────
+//  State 
 let users       = [];
 let departments = [];
 
 const ROLES = ['user', 'checker', 'approver', 'admin'];
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// Helpers 
 function roleBadgeClass(role) {
   if (role === 'admin')    return 'rejected';   // red — stands out
   if (role === 'checker')  return 'progress';   // blue
@@ -29,7 +29,7 @@ function deptOptions(selectedId) {
   return none + opts;
 }
 
-// ── Render ───────────────────────────────────────────────────────────────────
+//  Render 
 function renderList() {
   const container = el('#user-list');
 
@@ -79,7 +79,7 @@ function renderList() {
   `).join('');
 }
 
-// ── Edit mode ────────────────────────────────────────────────────────────────
+//  Edit mode 
 window.toggleDeptSelect = function(id) {
   const role = el(`#edit-role-${id}`).value;
   el(`#edit-dept-${id}`).style.display = ['checker', 'approver'].includes(role) ? 'block' : 'none';
@@ -119,7 +119,7 @@ window.saveEdit = async function(id) {
   }
 };
 
-// ── Init ─────────────────────────────────────────────────────────────────────
+//  Init 
 async function render() {
   await loadComponent('#navbar-slot', '../../components/navbar.html');
   el('#nav-logout').addEventListener('click', () => authService.logout());

@@ -90,7 +90,7 @@ async function initNavbarNotifications() {
       }
     }
   } catch (err) {
-    // If not authenticated or error, ignore navbar notification fetch
+   
   }
 }
 

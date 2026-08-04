@@ -1,17 +1,18 @@
 requireRole('admin');
 
-// ── State ────────────────────────────────────────────────────────────────────
-// departments is the live list used to re-render; edits happen in-place by id.
+// Yeh section department manage karta State 
+
 let departments = [];
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// ── Helpers 
 function showAddError(msg) {
   const box = el('#add-error');
   box.textContent = msg;
   box.style.display = msg ? 'block' : 'none';
 }
 
-// ── Render ───────────────────────────────────────────────────────────────────
+// ── Render 
+
 function renderList() {
   const container = el('#dept-list');
 
@@ -66,10 +67,10 @@ function renderList() {
   `).join('');
 }
 
-// ── Edit mode ────────────────────────────────────────────────────────────────
-window.startEdit = function(id) {
-  el(`#view-${id}`).style.display   = 'none';
-  el(`#edit-${id}`).style.display   = 'flex';
+//Edit mode 
+window.startEdit = function (id) {
+  el(`#view-${id}`).style.display = 'none';
+  el(`#edit-${id}`).style.display = 'flex';
   el(`#actions-${id}`).innerHTML = `
     <button class="btn btn--primary" style="font-size:12px; padding:5px 10px;"
       onclick="saveEdit('${id}')">Save</button>
@@ -78,13 +79,13 @@ window.startEdit = function(id) {
   `;
 };
 
-window.cancelEdit = function(id) {
-  // Re-render from state (discards changes)
+window.cancelEdit = function (id) {
+
   renderList();
 };
 
-window.saveEdit = async function(id) {
-  const name         = el(`#edit-name-${id}`).value.trim();
+window.saveEdit = async function (id) {
+  const name = el(`#edit-name-${id}`).value.trim();
   const sequenceOrder = Number(el(`#edit-order-${id}`).value);
 
   if (!name) { alert('Name cannot be empty.'); return; }
@@ -100,8 +101,9 @@ window.saveEdit = async function(id) {
   }
 };
 
-// ── Delete ───────────────────────────────────────────────────────────────────
-window.deleteDept = async function(id) {
+//  Delete 
+
+window.deleteDept = async function (id) {
   const dept = departments.find((d) => d.id === id);
   if (!confirm(`Delete "${dept?.name}"? This cannot be undone.`)) return;
 
@@ -114,10 +116,10 @@ window.deleteDept = async function(id) {
   }
 };
 
-// ── Add ──────────────────────────────────────────────────────────────────────
+//  Add 
 async function addDepartment() {
   showAddError('');
-  const name         = el('#new-name').value.trim();
+  const name = el('#new-name').value.trim();
   const sequenceOrder = Number(el('#new-order').value);
 
   if (!name) { showAddError('Name is required.'); return; }
@@ -126,7 +128,7 @@ async function addDepartment() {
   try {
     const { data } = await requestService.adminCreateDepartment(name, sequenceOrder);
     departments.push(data);
-    el('#new-name').value  = '';
+    el('#new-name').value = '';
     el('#new-order').value = '';
     renderList();
   } catch (err) {
@@ -134,7 +136,7 @@ async function addDepartment() {
   }
 }
 
-// ── Init ─────────────────────────────────────────────────────────────────────
+//  Init 
 async function render() {
   await loadComponent('#navbar-slot', '../../components/navbar.html');
   el('#nav-logout').addEventListener('click', () => authService.logout());

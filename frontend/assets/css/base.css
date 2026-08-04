@@ -1,8 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
 :root {
-  /* Palette */
-  --c-bg:        #f8f8f7;
+    --c-bg:        #f8f8f7;
   --c-surface:   #ffffff;
   --c-border:    #e4e4e2;
   --c-border-2:  #d0d0cd;
@@ -23,8 +22,7 @@
   --c-red-bg:    #fef2f2;
   --c-blue:      #2563eb;
 
-  /* Tokens */
-  --radius-sm:   6px;
+    --radius-sm:   6px;
   --radius:      8px;
   --radius-lg:   12px;
   --shadow-sm:   0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);

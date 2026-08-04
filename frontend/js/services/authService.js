@@ -6,7 +6,7 @@ const authService = {
       auth: false,
     });
 
-    // Save to sessionStorage (tab-isolated) & localStorage (persistent fallback)
+ 
     sessionStorage.setItem(CONFIG.TOKEN_KEY, data.token);
     sessionStorage.setItem(CONFIG.ROLE_KEY, data.role);
     if (data.departmentName) {

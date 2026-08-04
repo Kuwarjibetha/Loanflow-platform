@@ -19,6 +19,12 @@ const requestService = {
     return apiRequest(`/requests/${requestId}/resubmit`, { method: 'POST' });
   },
 
+
+
+
+
+
+
   // Checker actions
   checkerQueue() {
     return apiRequest('/checker/queue');
@@ -35,6 +41,15 @@ const requestService = {
       body: { verificationStatus, invalidReason },
     });
   },
+
+
+
+
+
+
+
+
+
 
   // Approver actions
   approverQueue() {
@@ -55,6 +70,14 @@ const requestService = {
   approverReturn(requestId, remarks) {
     return apiRequest(`/approver/${requestId}/return`, { method: 'POST', body: { remarks } });
   },
+
+
+
+
+
+
+
+
 
   // Admin actions
   adminAllRequests() {
@@ -79,12 +102,21 @@ const requestService = {
     return apiRequest(`/admin/users/${id}`, { method: 'PATCH', body: fields });
   },
 
+
+
+
+
   // Audit Logs
   adminAuditLogs(requestId) {
     const url = requestId ? `/admin/audit-logs?requestId=${encodeURIComponent(requestId)}` : '/admin/audit-logs';
     return apiRequest(url);
   },
 
+
+
+
+
+  
   // Notification actions
   getNotifications() {
     return apiRequest('/notifications');

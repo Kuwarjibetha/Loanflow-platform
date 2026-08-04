@@ -8,7 +8,7 @@ function docBadgeClass(status) {
   return 'pending';
 }
 
-// Renders the documents section and wires verify buttons.
+// Documents section dikhata hai aur buttons set karta
 function renderDocs(documents) {
   const container = el('#doc-section');
 
@@ -54,7 +54,7 @@ function renderDocs(documents) {
 window.showInvalidInput = function(docId) {
   el(`#reason-wrap-${docId}`).style.display = 'block';
 
-  // Replace the "✗ Invalid" button with a "Confirm" button
+  // Invalid button ko Confirm button se replace karo
   el(`#invalid-btn-${docId}`).outerHTML = `
     <button
       class="btn btn--danger"
@@ -65,7 +65,7 @@ window.showInvalidInput = function(docId) {
   `;
 };
 
-// Calls PATCH /checker/:requestId/documents/:docId and refreshes the badge.
+// Document status update karne ke liye API call karta hai
 window.markDoc = async function(docId, status) {
   const invalidReason = status === 'invalid' ? (el(`#reason-${docId}`)?.value || '') : null;
 
@@ -78,16 +78,16 @@ window.markDoc = async function(docId, status) {
   try {
     await requestService.checkerVerifyDocument(requestId, docId, status, invalidReason);
 
-    // Update badge in-place — no full re-render needed
+    // Badge turant update karo, full render nahi chahiye
     const badge = el(`#badge-${docId}`);
     badge.textContent = status;
     badge.className = `badge badge--${docBadgeClass(status)}`;
 
-    // Hide action buttons after decision
+    // Decision ke baad buttons hata do
     const validBtn  = document.getElementById(`valid-btn-${docId}`);
     const reasonWrap = document.getElementById(`reason-wrap-${docId}`);
     if (validBtn) validBtn.remove();
-    // Remove the confirm button too (it replaced invalid-btn, so target by class near badge)
+    // Confirm button bhi remove karo
     badge.parentElement.querySelectorAll('button').forEach(b => b.remove());
     if (reasonWrap) reasonWrap.remove();
 

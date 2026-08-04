@@ -16,9 +16,8 @@ async function apiRequest(path, { method = 'GET', body, auth = true } = {}) {
   return data;
 }
 
-// Separate helper for file uploads - do NOT set Content-Type manually here.
-// The browser sets it automatically (multipart/form-data; boundary=...) when
-// you pass a FormData body, and overriding it breaks the upload.
+// File uploads ke liye alag helper. Yahan Content Type manually set mat karo. Jab FormData body pass hoti hai, browser ise automatically set karta hai
+// multipart form data with boundary ke saath. Override karne se upload break ho jata hai.
 async function apiUpload(path, formData) {
   const headers = {};
   const token = typeof authService !== 'undefined' ? authService.getToken() : (sessionStorage.getItem(CONFIG.TOKEN_KEY) || localStorage.getItem(CONFIG.TOKEN_KEY));
