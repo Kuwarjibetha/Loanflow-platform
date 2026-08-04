@@ -1,62 +1,128 @@
 # Agent Documentation
 
-This document describes the technical architecture and working flow of the backend service.
+Technical reference for the LoanFlow backend — architecture, flow, and maintenance notes.
+
+---
 
 ## Tech Stack
-- Node.js with Express
-- Sequelize ORM
-- MySQL / MariaDB via `mysql2`
-- JWT-based authentication using `jsonwebtoken`
-- Password hashing using `bcryptjs`
-- Request logging with `morgan`
-- CORS enabled with `cors`
-- Environment variables loaded via `dotenv`
 
-## Application Flow
+| Tool | Purpose |
+|------|---------|
+| Node.js + Express | HTTP server and routing |
+| Sequelize | ORM for MySQL |
+| `bcryptjs` | Password hashing |
+| `jsonwebtoken` | JWT generation & verification |
+| `morgan` | HTTP request logging |
+| `cors` | Cross-origin resource sharing |
+| `multer` + `cloudinary` | File/document upload |
+| `dotenvx` | Environment variable loading |
 
-### Startup
-- `app.js` loads environment variables.
-- Express middleware is registered: `cors`, `express.json()`, and `morgan('dev')`.
-- Health check endpoint: `GET /health`
-- API base route: `/api/v1`
-- Database connection is established with Sequelize before the server starts.
+---
 
-### Routing
-- All API routes are defined under `routes/v1`.
-- `routes/v1/index.js` mounts module-specific routers for `/auth`, `/requests`, `/checker`, and `/approver`.
-- Each route file applies authentication and authorization middleware where required.
+## Application Startup (`app.js`)
 
-### Authentication and Authorization
-- `middleware/auth.js` checks JWT tokens and identifies the logged-in user.
-- Role-based access is enforced with `authorize(role)`.
-- Public routes: `POST /api/v1/auth/register`, `POST /api/v1/auth/login`.
-- Protected user routes: `/api/v1/requests/*`.
-- Protected checker routes: `/api/v1/checker/*`.
-- Protected approver routes: `/api/v1/approver/*`.
+1. Load `.env` with `dotenvx`.
+2. Register Express middleware: `cors`, `express.json()`, `morgan('dev')`.
+3. Serve frontend static files from `../frontend` at `/`.
+4. Mount API router: `app.use('/api/v1', require('./routes/v1'))`.
+5. Authenticate database, then `app.listen()`.
 
-### Controllers
-- Controllers are in `controllers/v1` and map route actions to service calls.
-- Controller functions handle request data extraction, service invocation, and JSON responses.
-- Errors are forwarded to error middleware using `next(err)`.
+---
 
-### Services
-- Services live under `service/v1`.
-- Business logic and database transactions are centralized here.
-- Workflow operations and request queue retrieval are handled by separate service modules.
+## Domain Sub-folder Architecture
 
-## Key Concepts
+All backend layers follow the same **domain-driven sub-folder pattern**:
 
-### Loan Request Workflow
-- A loan request starts at the checker stage.
-- `ApprovalStage` records represent current and next review states.
-- `service/v1/workflow.service.js` advances the request through stages or returns it to the user.
-- Approver stages are scoped to departments.
+```
+<layer>/
+├── <domain>/
+│   └── <domain>.<layer>.js
+└── index.js      ← barrel exporter
+```
 
-### Queue Logic
-- `checkerQueue()` returns requests awaiting checker review.
-- `approverQueue(departmentId)` returns requests awaiting approval for a department.
+**Layers and their barrel exporters:**
+
+| Layer | Path | Barrel Import |
+|-------|------|---------------|
+| Config | `config/index.js` | `require('./config')` |
+| Models | `models/index.js` | `require('./models')` |
+| Services | `service/v1/index.js` | `require('./service/v1')` |
+| Controllers | `controllers/v1/index.js` | `require('./controllers/v1')` |
+| Routes | `routes/v1/index.js` | `require('./routes/v1')` |
+| Middleware | `middleware/index.js` | `require('./middleware')` |
+| Utils | `utils/index.js` | `require('./utils')` |
+
+---
+
+## Routing Architecture
+
+```
+routes/v1/index.js
+├── /auth          → auth/auth.routes.js
+├── /requests      → request/request.routes.js
+├── /checker       → checker/checker.routes.js
+├── /approver      → approver/approver.routes.js
+├── /admin         → admin/admin.routes.js
+└── /notifications → notification/notification.routes.js
+```
+
+---
+
+## Authentication & Authorization
+
+- JWT is verified by `middleware/auth/auth.middleware.js`.
+- Token payload: `{ id, role, departmentId, departmentName }`.
+- `authenticate` attaches decoded user to `req.user`.
+- `authorize(...roles)` restricts access to specific roles.
+- The `dispatchToStage` middleware (`middleware/dispatcher/`) validates:
+  - The loan request exists and has an active stage.
+  - The requesting user's role and departmentId match the current stage.
+
+---
+
+## Loan Request Workflow
+
+```
+[User Submits] → [Checker Review] → [Approver (DPO)] → [Approver (Finance)] → [Approved]
+                      ↓                    ↓
+                [Return to User]     [Reroute to Dept]
+                      ↓
+                [User Resubmits]
+```
+
+- `initStages()` — builds one checker stage + one approver stage per department.
+- `advanceStage()` — marks current stage approved, activates next, or marks request fully approved.
+- `rerouteToDepartment()` — skips current stage, activates target department's approver stage.
+- `returnToUser()` — returns request with remarks; status → `returned_to_user`.
+- `resubmit()` — reactivates the returned stage; status → `checker_review` or `approver_review`.
+
+---
+
+## Notifications & Audit Logs
+
+Every workflow action in `workflow.service.js` creates:
+1. A `Notification` for the request owner (`createNotification(userId, message, t)`).
+2. An `AuditLog` entry for the action (`logAction(requestId, userId, action, details, t)`).
+
+Both are created inside the same Sequelize transaction as the stage update.
+
+---
+
+## Roles Summary
+
+| Role | Access |
+|------|--------|
+| `user` | Submit, track, resubmit own requests |
+| `checker` | View checker queue, forward/return + verify documents |
+| `approver` | View dept queue, approve/reroute/return requests |
+| `admin` | Full CRUD on departments, users, requests, audit logs |
+
+---
 
 ## Maintenance Notes
-- Keep query and transaction logic inside service modules.
-- Keep controllers focused on request/response handling.
-- Use consistent folder naming and route naming conventions to avoid confusion between resources.
+
+- All business logic lives in `service/v1/<domain>/<domain>.service.js`.
+- Controllers stay thin: extract input → call service → send JSON response.
+- All cross-service imports go through `require('../service/v1')` (barrel exporter).
+- New features should follow the same domain sub-folder pattern.
+- Multi-tab department isolation uses `sessionStorage` per browser tab in the frontend.

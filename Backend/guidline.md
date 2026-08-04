@@ -1,42 +1,108 @@
-# Naming and Folder Guidelines
+# Naming & Folder Guidelines
 
-This project uses a clear folder and naming convention for controllers, services, and API routes.
+This project uses a **domain-driven sub-folder pattern** across all backend layers.
 
-## Folder Structure
-- `controllers/v1/`: contains controller modules for API endpoints.
-- `routes/v1/`: contains route definitions and middleware wiring.
-- `service/v1/`: contains service modules with business logic.
-- `models/`: contains Sequelize model definitions.
-- `middleware/`: contains reusable middleware like authentication and dispatching.
+---
 
-## Naming Rules
-- Service file names should describe the main domain or action set.
-  - Example: `request.service.js`, `workflow.service.js`
-- Controller file names should match the route group.
-  - Example: `request.controller.js`, `checker.controller.js`, `approver.controller.js`
-- Route file names should match their route prefix.
-  - Example: `request.routes.js`, `checker.routes.js`, `approver.routes.js`
-- API endpoints should follow the service/controller purpose.
-  - Example: `POST /api/v1/requests/` maps to request service logic.
-  - Example: `GET /api/v1/approver/queue` maps to approver queue workflow.
+## Core Rule — Domain Sub-folder Pattern
 
-## Service and API Naming
-- Use service names that directly reflect API behavior.
-  - Example: `request.service.js` exposes `createRequest`, `getStatus`, `listForUser`, `checkerQueue`, `approverQueue`.
-- Keep controller names aligned with route names and HTTP actions.
-  - Example: `approver.controller.js` exports `queue`, `approve`, `reroute`, `returnRequest`.
-- Avoid generic names like `handler.js`; prefer resource-specific names.
+Every file lives inside a folder named after its domain:
 
-## Route Design
-- Use plural resource names for RESTful collections.
-  - Example: `/requests` for loan request operations.
-- Use route prefixes for role-specific actions.
-  - Example: `/checker` and `/approver`.
-- Use nested route actions only for stage-specific commands.
-  - Example: `/checker/:id/forward`, `/approver/:id/reroute`.
+```
+<layer>/
+├── <domain>/
+│   └── <domain>.<layer-suffix>.js
+└── index.js      ← barrel exporter for the whole layer
+```
 
-## General Guidelines
-- Controllers should be thin: validate request, call service, return response.
-- Services should encapsulate business logic and database transactions.
-- Keep naming consistent across folders so the service name, controller name, and route name are easy to follow.
-- Document new service files in `service.md` when adding new domain logic.
+### Examples
+
+| Layer | Domain | File Path |
+|-------|--------|-----------|
+| service | approver | `service/v1/approver/approver.service.js` |
+| controller | checker | `controllers/v1/checker/checker.controller.js` |
+| route | notification | `routes/v1/notification/notification.routes.js` |
+| middleware | auth | `middleware/auth/auth.middleware.js` |
+| model | LoanRequest | `models/LoanRequest/LoanRequest.js` |
+| config | db | `config/db/db.js` |
+| util | response | `utils/response/response.util.js` |
+
+---
+
+## File Naming Rules
+
+| Type | Suffix | Example |
+|------|--------|---------|
+| Service | `.service.js` | `workflow.service.js` |
+| Controller | `.controller.js` | `approver.controller.js` |
+| Route | `.routes.js` | `checker.routes.js` |
+| Middleware | `.middleware.js` | `auth.middleware.js` |
+| Utility | `.util.js` | `response.util.js` |
+| Model | Capitalized | `LoanRequest.js` |
+
+---
+
+## Barrel Exporters (`index.js`)
+
+Every directory has an `index.js` that re-exports all its domain modules.
+
+```
+// Example: service/v1/index.js
+const approverService = require('./approver/approver.service');
+const requestService  = require('./request/request.service');
+// ...
+module.exports = { ...approverService, ...requestService, ... };
+```
+
+Imports across layers always use the barrel:
+```js
+// ✅ Correct
+const { createRequest } = require('../service/v1');
+const { authenticate }  = require('../middleware');
+
+// ❌ Wrong (direct path, bypasses barrel)
+const { createRequest } = require('../service/v1/request/request.service');
+```
+
+---
+
+## API Route Naming
+
+- Use **plural resource names** for RESTful collections: `/requests`, `/notifications`.
+- Use **role prefixes** for role-specific actions: `/checker/*`, `/approver/*`, `/admin/*`.
+- Nested sub-actions use `:id/action` format:
+  - `/checker/:id/forward`, `/approver/:id/reroute`.
+
+---
+
+## Controller Rules
+
+- **Thin controllers** only: validate input → call service → return JSON.
+- No Sequelize queries inside controllers.
+- All errors forwarded with `next(err)`.
+
+---
+
+## Service Rules
+
+- All business logic, Sequelize queries, and transactions live here.
+- Services import models directly (`require('../models')`).
+- Cross-domain services call each other by importing from the barrel:
+  - e.g., `workflow.service.js` imports `createNotification` from `notification.service.js`.
+- Transactions are passed as the last argument `(t)` or `(transaction)`.
+
+---
+
+## Model Rules
+
+- One model per sub-folder: `models/<ModelName>/<ModelName>.js`.
+- Models import Sequelize from `../../config/db/db`.
+- All associations are defined in `models/index.js`, not in individual model files.
+
+---
+
+## General Rules
+
+- Never use generic names like `handler.js`, `helper.js`, or `util.js` without a domain prefix.
+- Prefer explicit over implicit: names must communicate what domain and what layer.
+- When adding a new domain, replicate the sub-folder pattern in every affected layer.

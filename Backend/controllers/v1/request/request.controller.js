@@ -1,4 +1,4 @@
-const { createRequest, getStatus, listForUser, listAll, addDocument, resubmitRequest } = require('../../../service/v1');
+const { createRequest, getStatus, listRequestsForUser, listAll, addDocument, resubmitRequest } = require('../../../service/v1');
 
 async function submit(req, res, next) {
   try {
@@ -21,7 +21,7 @@ async function status(req, res, next) {
 
 async function myRequests(req, res, next) {
   try {
-    const requests = await listForUser(req.user.id);
+    const requests = await listRequestsForUser(req.user.id);
     res.json({ success: true, data: requests });
   } catch (err) {
     next(err);

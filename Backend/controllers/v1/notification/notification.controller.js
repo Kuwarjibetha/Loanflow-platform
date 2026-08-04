@@ -1,8 +1,8 @@
-const { listForUser, markAsRead } = require('../../../service/v1');
+const { listNotifications, markAsRead } = require('../../../service/v1');
 
 async function list(req, res, next) {
   try {
-    const notifications = await listForUser(req.user.id);
+    const notifications = await listNotifications(req.user.id);
     res.json({ success: true, data: notifications });
   } catch (err) {
     next(err);
