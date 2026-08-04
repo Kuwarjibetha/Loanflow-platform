@@ -3,7 +3,7 @@ const { User, Department } = require('../../../models');
 const VALID_ROLES = ['user', 'checker', 'approver', 'admin'];
 
 async function listUsers() {
-  // Include department name so the frontend can show it without a second fetch
+// Department ka naam include karo, taaki frontend bina second fetch ke show kar sake
   return User.findAll({
     attributes: ['id', 'name', 'email', 'role', 'departmentId', 'createdAt'],
     include: [{ model: Department, as: 'department', attributes: ['id', 'name'], required: false }],
@@ -24,7 +24,7 @@ async function updateUser(id, { role, departmentId }) {
     user.role = role;
   }
 
-  // departmentId is only meaningful for checker/approver; clear it for other roles
+// departmentId sirf checker/approver ke liye relevant hai; baaki roles ke liye ise clear kar do
   if (departmentId !== undefined) {
     user.departmentId = departmentId || null;
   }

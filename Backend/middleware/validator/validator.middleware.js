@@ -1,5 +1,6 @@
-// Validator middleware — request body validation helper
-// Extend with express-validator or joi as needed.
+
+
+
 
 function validate(schema) {
   return (req, res, next) => {

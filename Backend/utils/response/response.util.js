@@ -1,4 +1,4 @@
-// Response utility helpers — centralise success/error response shapes.
+// Response utility helpers  success or error response ka format ek jagah centralise karte hain.
 
 function success(res, data, status = 200) {
   return res.status(status).json({ success: true, data });

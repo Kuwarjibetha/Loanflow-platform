@@ -54,9 +54,10 @@ async function addDocument(requestId, userId, { docType, filePath }) {
   });
 }
 
-// User resubmits their own returned request. currentStageId still points
-// at the stage that returned it, so we just fetch that stage and hand it
-// to the workflow engine's resubmit() function.
+
+
+
+
 async function resubmitRequest(requestId, userId) {
   const request = await LoanRequest.findOne({
     where: { id: requestId, userId },

@@ -2,10 +2,23 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/db/db');
 
 const LoanRequest = sequelize.define('LoanRequest', {
-  id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
-  userId: { type: DataTypes.UUID, allowNull: false },
-  loanType: { type: DataTypes.STRING, allowNull: false },
-  amountRequested: { type: DataTypes.DECIMAL(12, 2), allowNull: false },
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true
+  },
+  userId: {
+    type: DataTypes.UUID,
+    allowNull: false
+  },
+  loanType: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  amountRequested: {
+    type: DataTypes.DECIMAL(12, 2),
+    allowNull: false
+  },
   status: {
     type: DataTypes.ENUM(
       'submitted', 'checker_review', 'returned_to_user',

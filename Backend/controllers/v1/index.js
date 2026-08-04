@@ -7,10 +7,8 @@ const notificationController = require('./notification/notification.controller')
 const requestController = require('./request/request.controller');
 const userController = require('./user/user.controller');
 
-module.exports = {
-  approverController,
-  auditController,
-  authController,
+module.exports = { approverController,
+  auditController, authController,
   checkerController,
   departmentController,
   notificationController,

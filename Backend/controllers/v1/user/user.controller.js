@@ -11,7 +11,7 @@ async function list(req, res, next) {
 
 async function update(req, res, next) {
   try {
-    // Prevent an admin from demoting themselves or breaking access
+    
     if (req.params.id === req.user.id && req.body.role && req.body.role !== 'admin') {
       return res.status(400).json({ success: false, message: 'You cannot change your own role' });
     }

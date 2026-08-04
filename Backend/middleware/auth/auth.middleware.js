@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
-// Verifies JWT and attaches { id, role, departmentId } to req.user
-function authenticate(req, res, next) {
+
+function authenticate(req, res, next) { // Verifies JWT and attaches ( id, role, departmentId )to req.user
   const header = req.headers.authorization;
   if (!header || !header.startsWith('Bearer ')) {
     return res.status(401).json({ success: false, message: 'No token provided' });
@@ -16,8 +16,8 @@ function authenticate(req, res, next) {
   }
 }
 
-// Restricts a route to specific roles, e.g. authorize('checker', 'admin')
-function authorize(...allowedRoles) {
+
+function authorize(...allowedRoles) {   // Restricts a route to specific roles, jaise ki  authorize('checker', 'admin')
   return (req, res, next) => {
     if (!req.user || !allowedRoles.includes(req.user.role)) {
       return res.status(403).json({ success: false, message: 'Forbidden for this role' });

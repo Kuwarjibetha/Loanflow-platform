@@ -4,20 +4,20 @@ const { requestController, departmentController, userController, auditController
 
 router.use(authenticate, authorize('admin'));
 
-// Requests
-router.get('/requests', requestController.allRequests);
 
-// Department CRUD
-router.get('/departments',        departmentController.list);
+router.get('/requests', requestController.allRequests); // Requests
+
+
+router.get('/departments',        departmentController.list); // Department CRUD
 router.post('/departments',       departmentController.create);
 router.patch('/departments/:id',  departmentController.update);
 router.delete('/departments/:id', departmentController.remove);
 
-// User management
-router.get('/users',        userController.list);
+
+router.get('/users',        userController.list); // User management
 router.patch('/users/:id',  userController.update);
 
-// Audit logs
-router.get('/audit-logs', auditController.list);
+
+router.get('/audit-logs', auditController.list); // Audit logs
 
 module.exports = router;

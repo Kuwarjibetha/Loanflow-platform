@@ -2,8 +2,7 @@ const { sequelize, ApprovalStage, Department } = require('../../../models');
 const { createNotification } = require('../notification/notification.service');
 const { logAction } = require('../audit/audit.service');
 
-// Creates the full stage chain for a new request: one checker stage,
-// then one approver stage per department (ordered by sequenceOrder).
+// Nayi request ke liye poori stage chain banata hai: pehle ek checker stage,  phir har department ke liye ek approver stage (sequenceOrder ke hisaab se).
 async function initStages(loanRequest, t) {
   const departments = await Department.findAll({
     order: [['sequenceOrder', 'ASC']],
@@ -46,8 +45,7 @@ async function initStages(loanRequest, t) {
   return created;
 }
 
-// Moves a request to the next stage in sequence, or marks it fully
-// approved if this was the last department.
+// Request ko sequence ke hisaab se next stage par move karta hai, ya agar yeh last department tha to ise fully approved mark karta hai.
 async function advanceStage(loanRequest, currentStage, actingUser, remarks) {
   return sequelize.transaction(async (t) => {
     currentStage.status = 'approved';
@@ -106,7 +104,14 @@ async function advanceStage(loanRequest, currentStage, actingUser, remarks) {
   });
 }
 
-// Reroutes an approver-stage request to a different department.
+
+
+
+
+
+
+
+// Approver-stage wali request ko kisi doosre department mein reroute karta hai.
 async function rerouteToDepartment(loanRequest, currentStage, targetDepartmentId, actingUser, remarks) {
   return sequelize.transaction(async (t) => {
     currentStage.status = 'skipped';
@@ -158,8 +163,15 @@ async function rerouteToDepartment(loanRequest, currentStage, targetDepartmentId
   });
 }
 
-// Sends the request back to the user for correction/rejection.
-async function returnToUser(loanRequest, currentStage, actingUser, remarks) {
+
+
+
+
+
+
+
+
+async function returnToUser(loanRequest, currentStage, actingUser, remarks) { // Correction ya rejection ke liye request ko user ke paas wapas bhejta hai.
   return sequelize.transaction(async (t) => {
     currentStage.status = 'returned';
     currentStage.actedByUserId = actingUser.id;
@@ -188,9 +200,21 @@ async function returnToUser(loanRequest, currentStage, actingUser, remarks) {
   });
 }
 
-// User resubmits a returned request. Re-activates the exact stage that
-// returned it (checker or a specific department's approver) rather than
-// restarting the whole chain - whoever flagged the issue reviews it again.
+
+
+
+
+
+
+
+
+
+
+
+
+// User returned request ko dobara submit karta hai. Jis exact stage ne request
+// return ki thi (checker ya kisi specific department ka approver), usi ko
+// re-activate karta hai; poori chain restart nahi hoti.
 async function resubmit(loanRequest, currentStage) {
   if (currentStage.status !== 'returned') {
     const err = new Error('Only returned requests can be resubmitted');

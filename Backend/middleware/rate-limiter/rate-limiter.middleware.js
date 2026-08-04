@@ -1,9 +1,11 @@
-// Rate Limiter middleware — prevents brute force & abuse
-// Extend with express-rate-limit or similar as needed.
+// Rate Limiter middleware
+const { rateLimit } = require('express-rate-limit');
 
-function rateLimiter(req, res, next) {
-  // TODO: plug in express-rate-limit here
-  next();
-}
+const rateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+});
 
 module.exports = rateLimiter;

@@ -7,7 +7,7 @@ const Document = require('./Document/Document');
 const AuditLog = require('./AuditLog/AuditLog');
 const Notification = require('./Notification/Notification');
 
-// --- Associations ---
+// Associations 
 User.hasMany(LoanRequest, { foreignKey: 'userId', as: 'requests' });
 LoanRequest.belongsTo(User, { foreignKey: 'userId', as: 'applicant' });
 
@@ -22,7 +22,19 @@ LoanRequest.belongsTo(ApprovalStage, { foreignKey: 'currentStageId', as: 'curren
 Department.hasMany(ApprovalStage, { foreignKey: 'departmentId', as: 'stages' });
 ApprovalStage.belongsTo(Department, { foreignKey: 'departmentId' });
 
-// Users can belong to a department (checker/approver roles)
+
+
+
+
+
+
+
+
+
+
+
+
+// Users (checker/approver roles)
 User.belongsTo(Department, { foreignKey: 'departmentId', as: 'department' });
 Department.hasMany(User, { foreignKey: 'departmentId', as: 'members' });
 
