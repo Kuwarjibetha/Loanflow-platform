@@ -4,7 +4,19 @@ async function render() {
   await loadComponent('#navbar-slot', '../../components/navbar.html');
   el('#nav-logout').addEventListener('click', () => authService.logout());
 
-  const { data } = await requestService.approverQueue();
+  const res = await requestService.approverQueue();
+  const data = res.data || [];
+  const deptName = res.department ? res.department.name : (authService.getDept() || '');
+
+  const subtitle = el('#dept-subtitle');
+  if (subtitle && deptName) {
+    let cleanDept = deptName.replace(/\s*approver\s*/gi, '').trim();
+    if (cleanDept && !cleanDept.toLowerCase().includes('dept')) {
+      cleanDept = cleanDept + ' Department';
+    }
+    subtitle.textContent = `Active Department: ${cleanDept}`;
+  }
+
   const list = el('#queue-list');
 
   if (!data.length) {

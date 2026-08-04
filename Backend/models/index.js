@@ -5,10 +5,14 @@ const LoanRequest = require('./LoanRequest');
 const ApprovalStage = require('./ApprovalStage');
 const Document = require('./Document');
 const AuditLog = require('./AuditLog');
+const Notification = require('./Notification');
 
 // --- Associations ---
 User.hasMany(LoanRequest, { foreignKey: 'userId', as: 'requests' });
 LoanRequest.belongsTo(User, { foreignKey: 'userId', as: 'applicant' });
+
+User.hasMany(Notification, { foreignKey: 'userId', as: 'notifications' });
+Notification.belongsTo(User, { foreignKey: 'userId' });
 
 LoanRequest.hasMany(ApprovalStage, { foreignKey: 'loanRequestId', as: 'stages' });
 ApprovalStage.belongsTo(LoanRequest, { foreignKey: 'loanRequestId' });
@@ -28,6 +32,7 @@ LoanRequest.hasMany(Document, { foreignKey: 'loanRequestId', as: 'documents' });
 Document.belongsTo(LoanRequest, { foreignKey: 'loanRequestId' });
 
 LoanRequest.hasMany(AuditLog, { foreignKey: 'loanRequestId', as: 'auditLogs' });
-AuditLog.belongsTo(User, { foreignKey: 'userId' });
+AuditLog.belongsTo(LoanRequest, { foreignKey: 'loanRequestId', as: 'loanRequest' });
+AuditLog.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
-module.exports = { sequelize, User, Department, LoanRequest, ApprovalStage, Document, AuditLog };
+module.exports = { sequelize, User, Department, LoanRequest, ApprovalStage, Document, AuditLog, Notification };

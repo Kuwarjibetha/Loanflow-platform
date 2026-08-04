@@ -1,9 +1,23 @@
 <nav class="navbar">
-  <div class="navbar__brand">
+  <a href="/index.html" class="navbar__brand" style="text-decoration:none; color:inherit;">
     <span>L</span>
     LoanFlow
-  </div>
+  </a>
   <div class="navbar__links">
+    <a href="/index.html" style="font-size:13px; color:var(--c-muted); margin-right:4px;">Home</a>
+    <span id="nav-dept-badge" class="badge" style="display:none; font-size:11px; padding:3px 9px; margin-right:4px;"></span>
+    <div class="notif-wrapper" style="position: relative;">
+      <button id="nav-notif-btn" class="btn btn--ghost" style="padding: 4px 8px; position: relative;" title="Notifications">
+        🔔<span id="notif-badge" class="badge badge--rejected" style="display:none; font-size: 10px; padding: 1px 5px; position: absolute; top: -3px; right: -3px;">0</span>
+      </button>
+      <div id="notif-dropdown" class="card" style="display:none; position: absolute; right: 0; top: 38px; width: 320px; max-height: 400px; overflow-y: auto; z-index: 1000; padding: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.12);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--c-border);">
+          <span class="section-label" style="margin-bottom:0;">Notifications</span>
+          <small id="notif-close" style="cursor:pointer; color:var(--c-muted); font-weight:600; font-size:14px;">✕</small>
+        </div>
+        <div id="notif-list"></div>
+      </div>
+    </div>
     <a href="#" id="nav-logout">Logout</a>
   </div>
 </nav>

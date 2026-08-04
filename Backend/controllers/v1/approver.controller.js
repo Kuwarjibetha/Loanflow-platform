@@ -1,10 +1,25 @@
 const { advanceStage, rerouteToDepartment, returnToUser } = require('../../service/v1/workflow.service');
 const { approverQueue } = require('../../service/v1/request.service');
+const { Department } = require('../../models');
 
 async function queue(req, res, next) {
   try {
+    const dept = req.user.departmentId ? await Department.findByPk(req.user.departmentId) : null;
     const stages = await approverQueue(req.user.departmentId);
-    res.json({ success: true, data: stages });
+    res.json({
+      success: true,
+      data: stages,
+      department: dept ? { id: dept.id, name: dept.name } : null,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function listDepartments(req, res, next) {
+  try {
+    const departments = await Department.findAll({ order: [['sequenceOrder', 'ASC']] });
+    res.json({ success: true, data: departments });
   } catch (err) {
     next(err);
   }
@@ -38,4 +53,4 @@ async function returnRequest(req, res, next) {
   }
 }
 
-module.exports = { queue, approve, reroute, returnRequest };
+module.exports = { queue, listDepartments, approve, reroute, returnRequest };

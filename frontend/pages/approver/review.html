@@ -12,16 +12,33 @@
   <div id="navbar-slot"></div>
   <div class="container">
     <div class="page-header">
-      <h2>Review Request</h2>
+      <div>
+        <h2>Review Request</h2>
+        <p id="dept-subtitle" style="font-size:13px; color:var(--c-accent); font-weight:600; margin-top:2px;"></p>
+      </div>
       <a href="queue.html" class="btn btn--outline">← Queue</a>
     </div>
     <div id="request-detail"></div>
+
     <div class="card" style="margin-top:16px;">
       <p class="section-label" style="margin-bottom:14px;">Approver Decision</p>
       <div class="form-group">
         <label for="remarks">Remarks</label>
         <textarea id="remarks" rows="3" placeholder="e.g. All documents verified, approved"></textarea>
       </div>
+
+      <!-- Inline Reroute Selector -->
+      <div id="reroute-box" style="display:none; margin-bottom:16px; padding:14px; background:var(--c-bg); border:1px solid var(--c-border-2); border-radius:var(--radius-sm);">
+        <p class="section-label" style="margin-bottom:8px; color:var(--c-accent);">Select Target Department to Reroute</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <select id="target-dept-select" style="flex:1; min-width:180px; padding:8px 12px; border:1px solid var(--c-border-2); border-radius:var(--radius-sm); font-size:14px; background:var(--c-surface);">
+            <option value="">Loading departments...</option>
+          </select>
+          <button id="confirm-reroute-btn" class="btn btn--primary">Confirm Reroute</button>
+          <button id="cancel-reroute-btn" class="btn btn--ghost">Cancel</button>
+        </div>
+      </div>
+
       <div class="action-row">
         <button id="approve-btn" class="btn btn--primary">Approve &amp; Forward</button>
         <button id="reroute-btn" class="btn btn--outline">Reroute to Other Dept</button>

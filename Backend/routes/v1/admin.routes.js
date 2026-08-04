@@ -3,6 +3,7 @@ const { authenticate, authorize } = require('../../middleware/auth');
 const { allRequests } = require('../../controllers/v1/request.controller');
 const { list: listDepts, create, update: updateDept, remove } = require('../../controllers/v1/department.controller');
 const { list: listUsers, update: updateUser } = require('../../controllers/v1/user.controller');
+const { list: listAuditLogs } = require('../../controllers/v1/audit.controller');
 
 router.use(authenticate, authorize('admin'));
 
@@ -18,5 +19,8 @@ router.delete('/departments/:id', remove);
 // User management
 router.get('/users',        listUsers);
 router.patch('/users/:id',  updateUser);
+
+// Audit logs
+router.get('/audit-logs', listAuditLogs);
 
 module.exports = router;

@@ -11,7 +11,7 @@
 </head>
 <body>
   <div id="navbar-slot"></div>
-  <div class="container" style="max-width:520px;">
+  <div class="container" style="max-width:540px;">
     <div class="page-header">
       <h2>New Loan Request</h2>
       <a href="dashboard.html" class="btn btn--outline">← Back</a>
@@ -22,30 +22,62 @@
     <div class="card">
       <form id="submit-form">
         <div class="form-group">
-          <label for="loanType">Loan Type</label>
-          <select id="loanType">
-            <option value="education">Education</option>
-            <option value="skill">Skill Development</option>
+          <label for="loanType">Loan Category &amp; Purpose</label>
+          <select id="loanType" required>
+            <optgroup label="Student &amp; Academic">
+              <option value="education">Higher Education / Tuition Loan</option>
+              <option value="student_laptop">Laptop &amp; Tech Equipment Loan</option>
+              <option value="skill">Skill &amp; Certification Course</option>
+              <option value="study_abroad">Study Abroad &amp; Travel Loan</option>
+            </optgroup>
+            <optgroup label="Personal &amp; Emergency">
+              <option value="home_repair">Home Repair &amp; Renovation</option>
+              <option value="medical">Medical &amp; Healthcare Emergency</option>
+              <option value="personal">Personal Emergency Loan</option>
+            </optgroup>
+            <optgroup label="Business &amp; Vehicle">
+              <option value="small_business">Small Business Startup Loan</option>
+              <option value="vehicle">Two-Wheeler / Vehicle Loan</option>
+            </optgroup>
           </select>
         </div>
+
         <div class="form-group">
           <label for="amountRequested">Amount Requested (₹)</label>
-          <input type="number" id="amountRequested" placeholder="e.g. 50000" required>
+          <input type="number" id="amountRequested" placeholder="e.g. 50000" min="1000" required>
         </div>
+
         <div class="divider"></div>
-        <p class="section-label">Document (optional)</p>
+        <p class="section-label">Document Upload (optional)</p>
+
         <div class="form-group">
           <label for="docType">Document Type</label>
           <select id="docType">
-            <option value="id_proof">ID Proof</option>
-            <option value="income_proof">Income Proof</option>
-            <option value="address_proof">Address Proof</option>
+            <optgroup label="Student &amp; Academic">
+              <option value="student_id">College / Student ID Card</option>
+              <option value="admission_letter">University Admission Letter / Fee Receipt</option>
+              <option value="marksheet">Marksheet / Academic Transcript</option>
+            </optgroup>
+            <optgroup label="Identity &amp; Legal">
+              <option value="id_proof">National ID (Aadhaar / Passport / Voter ID)</option>
+              <option value="pan_card">PAN Card</option>
+            </optgroup>
+            <optgroup label="Financial &amp; Income">
+              <option value="income_proof">Income Certificate / Salary Slip</option>
+              <option value="bank_statement">Bank Statement (3–6 Months)</option>
+              <option value="guarantor_proof">Parent / Guarantor Undertaking</option>
+            </optgroup>
+            <optgroup label="Address Proof">
+              <option value="address_proof">Address Proof (Utility Bill / Rent Agreement)</option>
+            </optgroup>
           </select>
         </div>
+
         <div class="form-group" style="margin-bottom:24px;">
-          <label for="documentFile">Upload File</label>
+          <label for="documentFile">Upload File (PDF or Image)</label>
           <input type="file" id="documentFile" accept=".jpg,.jpeg,.png,.pdf">
         </div>
+
         <button type="submit" class="btn btn--primary" style="width:100%; justify-content:center; padding:10px;">Submit Request</button>
       </form>
     </div>

@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { User } = require('../../models');
+const { User, Department } = require('../../models');
 
 async function register(req, res, next) {
   try {
@@ -23,19 +23,34 @@ async function register(req, res, next) {
 async function login(req, res, next) {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({
+      where: { email },
+      include: [{ model: Department, as: 'department', attributes: ['id', 'name'] }],
+    });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
+    const departmentName = user.department ? user.department.name : null;
+
     const token = jwt.sign(
-      { id: user.id, role: user.role, departmentId: user.departmentId },
+      { id: user.id, role: user.role, departmentId: user.departmentId, departmentName },
       process.env.JWT_SECRET,
       { expiresIn: '8h' }
     );
 
-    res.json({ success: true, data: { token, role: user.role } });
+    res.json({
+      success: true,
+      data: {
+        token,
+        role: user.role,
+        departmentId: user.departmentId,
+        departmentName,
+        name: user.name,
+        email: user.email,
+      },
+    });
   } catch (err) {
     next(err);
   }

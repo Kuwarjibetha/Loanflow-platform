@@ -1,7 +1,7 @@
 async function apiRequest(path, { method = 'GET', body, auth = true } = {}) {
   const headers = { 'Content-Type': 'application/json' };
   if (auth) {
-    const token = localStorage.getItem(CONFIG.TOKEN_KEY);
+    const token = typeof authService !== 'undefined' ? authService.getToken() : (sessionStorage.getItem(CONFIG.TOKEN_KEY) || localStorage.getItem(CONFIG.TOKEN_KEY));
     if (token) headers['Authorization'] = `Bearer ${token}`;
   }
   const res = await fetch(`${CONFIG.API_BASE_URL}${path}`, {
@@ -21,7 +21,7 @@ async function apiRequest(path, { method = 'GET', body, auth = true } = {}) {
 // you pass a FormData body, and overriding it breaks the upload.
 async function apiUpload(path, formData) {
   const headers = {};
-  const token = localStorage.getItem(CONFIG.TOKEN_KEY);
+  const token = typeof authService !== 'undefined' ? authService.getToken() : (sessionStorage.getItem(CONFIG.TOKEN_KEY) || localStorage.getItem(CONFIG.TOKEN_KEY));
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
   const res = await fetch(`${CONFIG.API_BASE_URL}${path}`, {

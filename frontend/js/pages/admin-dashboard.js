@@ -34,11 +34,16 @@ async function render() {
   }
 
   el('#request-list').innerHTML = data.map((r) => `
-    <div class="card">
-      <strong>${r.loanType}</strong> - ₹${r.amountRequested}
-      <span class="badge badge--${badgeClass(r.status)}">${r.status}</span>
-      <p style="font-size:13px; color:var(--color-muted); margin-top:6px;">
-        Applicant ID: ${r.userId.slice(0, 8)}... | Created: ${new Date(r.createdAt).toLocaleDateString()}
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <strong>${r.loanType.charAt(0).toUpperCase() + r.loanType.slice(1)} Loan</strong> - ₹${Number(r.amountRequested).toLocaleString('en-IN')}
+          <span class="badge badge--${badgeClass(r.status)}" style="margin-left:8px;">${r.status.replace(/_/g, ' ')}</span>
+        </div>
+        <a href="audit-logs.html?requestId=${r.id}" class="btn btn--outline" style="font-size:11px; padding:4px 10px;">Audit Trail ↗</a>
+      </div>
+      <p style="font-size:12px; color:var(--c-muted); margin-top:8px;">
+        Applicant ID: ${r.userId.slice(0, 8)}... | Request ID: ${r.id.slice(0, 8)}... | Created: ${new Date(r.createdAt).toLocaleDateString('en-IN')}
       </p>
     </div>
   `).join('');

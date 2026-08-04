@@ -1,4 +1,6 @@
 const { sequelize, ApprovalStage, Department } = require('../../models');
+const { createNotification } = require('./notification.service');
+const { logAction } = require('./audit.service');
 
 // Creates the full stage chain for a new request: one checker stage,
 // then one approver stage per department (ordered by sequenceOrder).
@@ -27,6 +29,20 @@ async function initStages(loanRequest, t) {
   loanRequest.currentStageId = firstStage.id;
   await loanRequest.save({ transaction: t });
 
+  await createNotification(
+    loanRequest.userId,
+    `Your ${loanRequest.loanType} loan request (₹${loanRequest.amountRequested}) has been submitted and sent for checker review.`,
+    t
+  );
+
+  await logAction(
+    loanRequest.id,
+    loanRequest.userId,
+    'REQUEST_CREATED',
+    { loanType: loanRequest.loanType, amountRequested: loanRequest.amountRequested },
+    t
+  );
+
   return created;
 }
 
@@ -50,9 +66,39 @@ async function advanceStage(loanRequest, currentStage, actingUser, remarks) {
       await nextStage.save({ transaction: t });
       loanRequest.currentStageId = nextStage.id;
       loanRequest.status = nextStage.role === 'checker' ? 'checker_review' : 'approver_review';
+
+      let deptName = '';
+      if (nextStage.departmentId) {
+        const dept = await Department.findByPk(nextStage.departmentId, { transaction: t });
+        if (dept) deptName = ` (${dept.name})`;
+      }
+      await createNotification(
+        loanRequest.userId,
+        `Your ${loanRequest.loanType} loan request has been forwarded to ${nextStage.role}${deptName}.`,
+        t
+      );
+      await logAction(
+        loanRequest.id,
+        actingUser.id,
+        'STAGE_FORWARDED',
+        { stageRole: currentStage.role, remarks: remarks || null },
+        t
+      );
     } else {
       loanRequest.status = 'approved';
       loanRequest.currentStageId = null;
+      await createNotification(
+        loanRequest.userId,
+        `Congratulations! Your ${loanRequest.loanType} loan request of ₹${loanRequest.amountRequested} has been fully approved!`,
+        t
+      );
+      await logAction(
+        loanRequest.id,
+        actingUser.id,
+        'REQUEST_APPROVED',
+        { remarks: remarks || null },
+        t
+      );
     }
     await loanRequest.save({ transaction: t });
 
@@ -91,6 +137,23 @@ async function rerouteToDepartment(loanRequest, currentStage, targetDepartmentId
     loanRequest.currentStageId = targetStage.id;
     await loanRequest.save({ transaction: t });
 
+    const targetDept = await Department.findByPk(targetDepartmentId, { transaction: t });
+    const targetDeptName = targetDept ? ` (${targetDept.name})` : '';
+
+    await createNotification(
+      loanRequest.userId,
+      `Your ${loanRequest.loanType} loan request was rerouted to ${targetDeptName || 'another department'}.`,
+      t
+    );
+
+    await logAction(
+      loanRequest.id,
+      actingUser.id,
+      'STAGE_REROUTED',
+      { targetDepartmentId, remarks: remarks || null },
+      t
+    );
+
     return loanRequest;
   });
 }
@@ -106,6 +169,20 @@ async function returnToUser(loanRequest, currentStage, actingUser, remarks) {
 
     loanRequest.status = 'returned_to_user';
     await loanRequest.save({ transaction: t });
+
+    await createNotification(
+      loanRequest.userId,
+      `Your ${loanRequest.loanType} loan request was returned to you. Remarks: "${remarks}".`,
+      t
+    );
+
+    await logAction(
+      loanRequest.id,
+      actingUser.id,
+      'REQUEST_RETURNED',
+      { remarks },
+      t
+    );
 
     return loanRequest;
   });
@@ -130,6 +207,20 @@ async function resubmit(loanRequest, currentStage) {
 
     loanRequest.status = currentStage.role === 'checker' ? 'checker_review' : 'approver_review';
     await loanRequest.save({ transaction: t });
+
+    await createNotification(
+      loanRequest.userId,
+      `Your ${loanRequest.loanType} loan request has been resubmitted for review.`,
+      t
+    );
+
+    await logAction(
+      loanRequest.id,
+      loanRequest.userId,
+      'REQUEST_RESUBMITTED',
+      {},
+      t
+    );
 
     return loanRequest;
   });

@@ -40,6 +40,9 @@ const requestService = {
   approverQueue() {
     return apiRequest('/approver/queue');
   },
+  approverListDepartments() {
+    return apiRequest('/approver/departments');
+  },
   approverApprove(requestId, remarks) {
     return apiRequest(`/approver/${requestId}/approve`, { method: 'POST', body: { remarks } });
   },
@@ -74,5 +77,19 @@ const requestService = {
   },
   adminUpdateUser(id, fields) {
     return apiRequest(`/admin/users/${id}`, { method: 'PATCH', body: fields });
+  },
+
+  // Audit Logs
+  adminAuditLogs(requestId) {
+    const url = requestId ? `/admin/audit-logs?requestId=${encodeURIComponent(requestId)}` : '/admin/audit-logs';
+    return apiRequest(url);
+  },
+
+  // Notification actions
+  getNotifications() {
+    return apiRequest('/notifications');
+  },
+  markNotificationRead(id) {
+    return apiRequest(`/notifications/${id}/read`, { method: 'PATCH' });
   },
 };
